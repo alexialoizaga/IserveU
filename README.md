@@ -1,0 +1,14 @@
+# IserveU
+Api Testing
+
+
+"api.suite.yml"
+class_name: ApiTester
+modules:
+    enabled:
+      - REST:
+          depends: PhpBrowser
+          part: Json
+      - PhpBrowser:
+            url: http://192.168.10.10
+
