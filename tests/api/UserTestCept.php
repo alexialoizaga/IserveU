@@ -6,7 +6,7 @@ use Faker\Factory as Faker;
 class UserTestCept
 {
    
-    protected $path = '/users';
+    protected $path = '/user';
 
 
     public function _before(){}
@@ -238,6 +238,15 @@ class UserTestCept
         {
             return false;
         }
+    }
+    
+    //Security: no voting without permission
+    //Conexion with database
+    public function userCanVote2(ApiTester $I, $id)
+    {
+        
+        $results = DB::select('select identity_verified FROM users WHERE ID = ?', array($id));
+        //print_r($resuts);
     }
 
 }
