@@ -220,6 +220,25 @@ class UserTestCept
             $I->seeResponseContainsJson(['permission_id' => $permission_id]);
         }
     }
+    
+    //Security: no voting without permission
+    public function userCanVote(ApiTester $I, $id)
+    {
+        $I->haveHttpHeader('Content-Type', 'application/json');
+
+        //Check user: the user must be verified (have goverment id)
+        $I->sendGET($this->path, array('id' => $id));
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseIsJson();
+        if($I->seeResponseContainsJson(['identity_verified' => 1]))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 }
 
