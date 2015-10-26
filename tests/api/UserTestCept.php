@@ -168,48 +168,56 @@ class UserTestCept
     }
 
 
-    //Assign Permissions: the user has not permissions yet
-    public function assignPermissions(ApiTester $I, $id)
+    //Assign Permissions: the rol has not permissions yet
+    public function assignPermissions(ApiTester $I, $role_id)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
 
-        //Insert permissions
-        for($i=0; $i<=20; $i++)
+        //Create array with permissions
+        $permissions = array();
+        $j = 0;
+        for($i=0;$i<=20;$i++)
         {
-            $role_id = rand(1,21);
+            $permission = rand(1,21);
+            $permissions[$j] = $permission;
+        }
+        //Remove duplicate values
+        $permissions = array_unique($permissions);
+
+        //Insert permissions
+        for($i=0; $i<count($permissions); $i++)
+        {
             $I->sendPOST($this->path, array(
-                'id' => $id,
-                'role_id' => $role_id));
+                'role_id' => $role_id,
+                'permission_id' => $permissions[$i]));
             $I->seeResponseCodeIs(200);
             $I->seeResponseIsJson();
-            $I->seeResponseContainsJson(['role_id' => $role_id]);
+            $I->seeResponseContainsJson(['permission' => $permissions[$i]]);
         }
-
-
     }
 
 
     //Assign Permisions (permissions received in the function's parameters)
-    //When the user has already permissions
-    public function assignUpadatePermission(ApiTester $I, $id, $permissions)
+    //When the role has already permissions
+    public function assignUpadatePermission(ApiTester $I, $role_id, $permissions)
     {
         $I->haveHttpHeader('Content-Type', 'application/json');
 
        
-        //Delete permissions that the user had 
-        $I->sendDELETE($this->path, array('id' => $id));
+        //Delete permissions that the rol had 
+        $I->sendDELETE($this->path, array('role_id' => $role_id));
         $I->seeResponseCodeIs(200);
-        $I->dontSeeRecord('users', ['id' => $id]);
+        $I->dontSeeRecord('users', ['role_id' => $role_id]);
 
         //Insert new permissions
         for($i=0; $i<count($permissions);$i++)
         {
             $I->sendPOST($this->path, array(
-                'id' => $id,
-                'role_id' => $permissions[$i]));
+                'role_id' => $role_id,
+                'permission_id' => $permissions[$i]));
             $I->seeResponseCodeIs(200);
             $I->seeResponseIsJson();
-            $I->seeResponseContainsJson(['role_id' => $role_id]);
+            $I->seeResponseContainsJson(['permission_id' => $permission_id]);
         }
     }
 
