@@ -211,7 +211,6 @@ class UserTestCept
             $I->seeResponseIsJson();
             $I->seeResponseContainsJson(['role_id' => $role_id]);
         }
-
     }
 
 }
