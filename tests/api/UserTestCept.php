@@ -241,12 +241,17 @@ class UserTestCept
     }
     
     //Security: no voting without permission
-    //Conexion with database
     public function userCanVote2(ApiTester $I, $id)
     {
         
-        $results = DB::select('select identity_verified FROM users WHERE ID = ?', array($id));
-        //print_r($resuts);
+        if($I->seeInDataBase('users', array('id' => $id, 'identity_verified' => 1)))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 }
